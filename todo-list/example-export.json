@@ -1,0 +1,51 @@
+[
+  {
+    "id": 1715674200000,
+    "text": "Estudar JavaScript ES6+",
+    "priority": "high",
+    "completed": false,
+    "createdAt": "2026-05-14T08:30:00.000Z"
+  },
+  {
+    "id": 1715674260000,
+    "text": "Fazer exercícios de CSS Grid",
+    "priority": "medium",
+    "completed": true,
+    "createdAt": "2026-05-14T08:31:00.000Z"
+  },
+  {
+    "id": 1715674320000,
+    "text": "Revisar conceitos de React",
+    "priority": "high",
+    "completed": false,
+    "createdAt": "2026-05-14T08:32:00.000Z"
+  },
+  {
+    "id": 1715674380000,
+    "text": "Ler documentação de Node.js",
+    "priority": "low",
+    "completed": false,
+    "createdAt": "2026-05-14T08:33:00.000Z"
+  },
+  {
+    "id": 1715674440000,
+    "text": "Criar projeto pessoal em GitHub",
+    "priority": "medium",
+    "completed": false,
+    "createdAt": "2026-05-14T08:34:00.000Z"
+  },
+  {
+    "id": 1715674500000,
+    "text": "Escrever testes unitários",
+    "priority": "high",
+    "completed": false,
+    "createdAt": "2026-05-14T08:35:00.000Z"
+  },
+  {
+    "id": 1715674560000,
+    "text": "Entrevistar para feedback do projeto",
+    "priority": "low",
+    "completed": true,
+    "createdAt": "2026-05-14T08:36:00.000Z"
+  }
+]
