@@ -5,8 +5,11 @@ Superbet Signals - Robô de Análise de Apostas
 Versão: 1.0
 """
 
-import json
+from flask import Flask, jsonify
+import os
 from datetime import datetime
+
+app = Flask(__name__)
 
 
 class BettingSignal:
@@ -74,15 +77,8 @@ class BettingAnalyzer:
         
         return signals
     
-    def run(self):
-        """Executa a análise"""
-        print("\n" + "="*60)
-        print("🎯 SUPERBET SIGNALS - Robô de Análise de Apostas")
-        print("="*60)
-        print(f"⏰ Análise realizada em: {self.analysis_time}")
-        print("="*60)
-        
-        # Jogos de exemplo
+    def get_all_signals(self):
+        """Retorna todos os sinais"""
         games = [
             {
                 'home': 'Flamengo',
@@ -109,33 +105,79 @@ class BettingAnalyzer:
         ]
         
         all_signals = []
-        
         for game in games:
-            print(f"\n🏟️  {game['home']} vs {game['away']}")
-            print("-" * 60)
-            
             signals = self.analyze_game(game['home'], game['away'], game['odds'])
-            
-            if signals:
-                for i, signal in enumerate(signals, 1):
-                    all_signals.append(signal)
-                    print(f"  {i}. {signal.signal_type}")
-                    print(f"     Probabilidade: {signal.probability:.1%}")
-                    print(f"     Confiança: {signal.confidence:.1%}")
-                    print(f"     Recomendação: {signal.recommendation}")
-            else:
-                print("  ❌ Sem sinais qualificados")
-        
-        print("\n" + "="*60)
-        print(f"✅ Total de sinais: {len(all_signals)}")
-        print("="*60)
-        print("\n📋 Disclaimer: Análise para fins educacionais.")
-        print("   Apostas envolvem risco. Use com responsabilidade.\n")
+            all_signals.extend(signals)
         
         return all_signals
 
 
+# Instanciar analisador
+analyzer = BettingAnalyzer()
+
+
+@app.route('/')
+def index():
+    """Página inicial"""
+    return jsonify({
+        'status': 'online',
+        'app': 'Superbet Signals',
+        'version': '1.0',
+        'message': 'Robô de análise de apostas com sinais de alta probabilidade',
+        'endpoints': {
+            'signals': '/api/signals',
+            'status': '/api/status',
+            'health': '/health'
+        },
+        'timestamp': datetime.now().isoformat()
+    })
+
+
+@app.route('/api/signals')
+def get_signals():
+    """Retorna os sinais de apostas"""
+    signals = analyzer.get_all_signals()
+    return jsonify({
+        'status': 'success',
+        'total_signals': len(signals),
+        'signals': [s.to_dict() for s in signals],
+        'timestamp': datetime.now().isoformat()
+    })
+
+
+@app.route('/api/status')
+def get_status():
+    """Retorna o status do robô"""
+    return jsonify({
+        'status': 'running',
+        'app': 'Superbet Signals',
+        'uptime': 'active',
+        'last_analysis': analyzer.analysis_time,
+        'timestamp': datetime.now().isoformat()
+    })
+
+
+@app.route('/health')
+def health():
+    """Health check para Render"""
+    return jsonify({'status': 'healthy'}), 200
+
+
+@app.errorhandler(404)
+def not_found(e):
+    """Tratador de erro 404"""
+    return jsonify({
+        'error': 'Not Found',
+        'message': 'O endpoint solicitado não existe',
+        'available_endpoints': {
+            'root': '/',
+            'signals': '/api/signals',
+            'status': '/api/status',
+            'health': '/health'
+        }
+    }), 404
+
+
 if __name__ == '__main__':
-    analyzer = BettingAnalyzer()
-    analyzer.run()
-    print("✅ Robô executado com sucesso!")
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=False)
